@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pisante Nordestino</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --marrom: #7B3A10;
+      --marrom-escuro: #4E2107;
+      --areia: #F2E0C8;
+      --verde: #2E7D32;
+      --verde-claro: #43A047;
+      --branco: #FFF9F4;
+      --texto: #1A0A00;
+      --sombra: rgba(78,33,7,0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--branco);
+      color: var(--texto);
+      padding-bottom: 90px;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--marrom-escuro);
+      color: var(--areia);
+      padding: 18px 20px 14px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 12px var(--sombra);
+    }
+
+    header h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    header p {
+      font-size: 0.8rem;
+      opacity: 0.75;
+      margin-top: 3px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    header nav {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    header nav a {
+      color: var(--areia);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border: 1px solid rgba(242,224,200,0.3);
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+
+    header nav a:hover, header nav a.ativo {
+      background: rgba(242,224,200,0.2);
+    }
+
+    /* BANNER */
+    .banner {
+      background: linear-gradient(135deg, var(--marrom) 0%, var(--marrom-escuro) 100%);
+      color: var(--areia);
+      padding: 30px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner::before {
+      content: '🌵';
+      font-size: 8rem;
+      position: absolute;
+      right: -10px;
+      top: -10px;
+      opacity: 0.1;
+    }
+
+    .banner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 1px;
+    }
+
+    .banner p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 5px;
+    }
+
+    /* SEÇÃO */
+    .secao {
+      display: none;
+      padding: 20px;
+    }
+
+    .secao.ativo { display: block; }
+
+    /* PRODUTOS */
+    .grid-produtos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .produto {
+      background: white;
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 2px 10px var(--sombra);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .produto:nth-child(2) { animation-delay: 0.1s; }
+    .produto:nth-child(3) { animation-delay: 0.2s; }
+    .produto:nth-child(4) { animation-delay: 0.3s; }
+
+    .produto-emoji {
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    .produto h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      color: var(--marrom-escuro);
+    }
+
+    .produto .preco {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--verde);
+    }
+
+    .produto .estoque {
+      font-size: 0.72rem;
+      color: #888;
+    }
+
+    .btn-comprar {
+      background: var(--verde-claro);
+      border: none;
+      padding: 9px 0;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      width: 100%;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-comprar:active { transform: scale(0.97); background: var(--verde); }
+
+    /* CARRINHO FLUTUANTE */
+    .carrinho-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--marrom-escuro);
+      color: var(--areia);
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 200;
+      box-shadow: 0 -3px 12px var(--sombra);
+    }
+
+    .carrinho-bar span { font-size: 0.9rem; font-weight: 600; }
+    .carrinho-bar .total { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: #A5D6A7; }
+
+    .btn-finalizar {
+      background: var(--verde-claro);
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-finalizar:active { background: var(--verde); }
+
+    /* CARRINHO PÁGINA */
+    .lista-carrinho { display: flex; flex-direction: column; gap: 10px; }
+
+    .item-carrinho {
+      background: white;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px var(--sombra);
+    }
+
+    .item-carrinho .nome { font-weight: 600; font-size: 0.9rem; }
+    .item-carrinho .preco { color: var(--verde); font-weight: 700; }
+
+    .btn-remover {
+      background: #ef5350;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .resumo-total {
+      background: var(--marrom-escuro);
+      color: var(--areia);
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .resumo-total p { font-size: 0.85rem; opacity: 0.8; }
+    .resumo-total .valor { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: #A5D6A7; }
+
+    /* CHECKOUT */
+    .form-checkout { display: flex; flex-direction: column; gap: 12px; }
+
+    .form-checkout input,
+    .form-checkout select,
+    .form-checkout textarea {
+      border: 2px solid #E8D5C0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+      background: white;
+      color: var(--texto);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-checkout input:focus,
+    .form-checkout select:focus { border-color: var(--marrom); }
+
+    .form-checkout label { font-weight: 600; font-size: 0.85rem; color: var(--marrom-escuro); }
+
+    .grupo { display: flex; flex-direction: column; gap: 5px; }
+
+    .btn-pagar {
+      background: var(--marrom);
+      border: none;
+      padding: 14px;
+      color: var(--areia);
+      border-radius: 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-pagar:active { background: var(--marrom-escuro); }
+
+    /* CHATBOT */
+    .chat-box {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px var(--sombra);
+      display: flex;
+      flex-direction: column;
+      height: 360px;
+    }
+
+    .chat-mensagens {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      animation: fadeUp 0.2s ease;
+    }
+
+    .msg.bot {
+      background: var(--areia);
+      color: var(--texto);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .msg.user {
+      background: var(--marrom);
+      color: var(--areia);
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+
+    .chat-input {
+      display: flex;
+      border-top: 1px solid #F0E0D0;
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      border: 2px solid #E8D5C0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .chat-input input:focus { border-color: var(--marrom); }
+
+    .chat-input button {
+      background: var(--marrom);
+      border: none;
+      color: var(--areia);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    /* NOTIFICAÇÃO */
+    .notif {
+      position: fixed;
+      top: 80px;
+      right: 16px;
+      background: var(--verde);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease;
+      display: none;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(60px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* SEÇÃO TÍTULO */
+    .secao-titulo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--marrom-escuro);
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--areia);
+    }
+
+    .vazio {
+      text-align: center;
+      color: #aaa;
+      padding: 40px 0;
+      font-size: 0.9rem;
+    }
+
+    /* badge */
+    .badge {
+      background: #ef5350;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      font-weight: 700;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌵 Pisante Nordestino</h1>
+  <p>Orgulho nordestino nos pés</p>
+  <nav>
+    <a href="#" class="ativo" onclick="ir('loja')">Loja</a>
+    <a href="#" onclick="ir('carrinho')">🛒 <span id="badge-qtd"></span></a>
+    <a href="#" onclick="ir('chat')">Chat</a>
+    <a href="#" onclick="ir('checkout')">Checkout</a>
+  </nav>
+</header>
+
+<div class="banner">
+  <h2>☀️ Coleção Nordeste 2025</h2>
+  <p>Chinelos feitos com alma do sertão</p>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<!-- LOJA -->
+<section class="secao ativo" id="sec-loja">
+  <p class="secao-titulo">Nossos Modelos</p>
+  <div class="grid-produtos" id="lista-produtos"></div>
+</section>
+
+<!-- CARRINHO -->
+<section class="secao" id="sec-carrinho">
+  <p class="secao-titulo">🛒 Meu Carrinho</p>
+  <div class="lista-carrinho" id="lista-carrinho"></div>
+  <div class="resumo-total" id="resumo-total" style="display:none">
+    <p>Total da compra</p>
+    <div class="valor" id="total-carrinho">R$ 0,00</div>
+    <button class="btn-finalizar" style="margin-top:12px;width:100%" onclick="ir('checkout')">Ir para Checkout</button>
+  </div>
+</section>
+
+<!-- CHECKOUT -->
+<section class="secao" id="sec-checkout">
+  <p class="secao-titulo">Finalizar Pedido</p>
+  <div class="form-checkout">
+    <div class="grupo">
+      <label>Seu nome</label>
+      <input type="text" id="ck-nome" placeholder="Ex: João Silva">
+    </div>
+    <div class="grupo">
+      <label>Endereço de entrega</label>
+      <input type="text" id="ck-endereco" placeholder="Rua, número, bairro">
+    </div>
+    <div class="grupo">
+      <label>Cidade</label>
+      <input type="text" id="ck-cidade" placeholder="Sua cidade">
+    </div>
+    <div class="grupo">
+      <label>Forma de pagamento</label>
+      <select id="ck-pagamento">
+        <option value="pix">PIX (5% desconto)</option>
+        <option value="whatsapp">WhatsApp + Combinar</option>
+      </select>
+    </div>
+    <div class="grupo">
+      <label>Observações</label>
+      <textarea id="ck-obs" rows="3" placeholder="Tamanho, cor favorita..."></textarea>
+    </div>
+    <button class="btn-pagar" onclick="finalizarPedido()">✅ CONFIRMAR PEDIDO</button>
+  </div>
+</section>
+
+<!-- CHAT -->
+<section class="secao" id="sec-chat">
+  <p class="secao-titulo">💬 Atendimento</p>
+  <div class="chat-box">
+    <div class="chat-mensagens" id="chat-msgs"></div>
+    <div class="chat-input">
+      <input type="text" id="chat-in" placeholder="Escreva sua pergunta..." onkeydown="if(event.key==='Enter')enviarMsg()">
+      <button onclick="enviarMsg()">➤</button>
+    </div>
+  </div>
+</section>
+
+<!-- BARRA CARRINHO -->
+<div class="carrinho-bar">
+  <div>
+    <span>🛒 <span id="bar-qtd">0</span> item(s)</span><br>
+    <span class="total">R$ <span id="bar-total">0,00</span></span>
+  </div>
+  <button class="btn-finalizar" onclick="ir('checkout')">Finalizar ➤</button>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('SW registrado'))
+      .catch(err => console.log('SW erro:', err));
+  }
+</script>
+</body>
+</html>
+

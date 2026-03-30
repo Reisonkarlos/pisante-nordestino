@@ -1,0 +1,18 @@
+{
+  "name": "pisante-nordestino",
+  "version": "1.0.0",
+  "description": "PWA de e-commerce de chinelos nordestinos",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.6.5"
+  }
+}
+
