@@ -12,7 +12,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // =============================================
 //  MIDDLEWARES
@@ -32,10 +32,11 @@ app.use(session({
 //  BANCO DE DADOS
 // =============================================
 const db = await mysql2.createConnection({
-  host:     'localhost',
-  user:     'root',
-  password: '',
-  database: 'pisante'
+  host:    process.env.MYSQLHOST        ||  'localhost',
+  user:    process.env.MYSQLUSER        ||  'root',
+  password: process.env.MYSQLPASSWORD   ||  '',
+  database: process.env.MYSQLDATABASE   ||  'pisante',
+  port:     process.env.MYSQLPORT       ||  3306
 });
 
 console.log('✅ Banco de dados conectado');
@@ -160,7 +161,7 @@ app.get('/api/admin/pedidos', verificarAdmin, async (req, res) => {
 app.get('/api/admin/dashboard', verificarAdmin, async (req, res) => {
   try {
     const [dados] = await db.execute(
-      'SELECT DATE(data) as dia, SUM(total) as total, COUNT(*) as pedidos FROM pedidos GROUP BY dia ORDER BY dia DESC LIMIT 7'
+      'SELECT DATE(data) as dia, SUM(total) as total, COUNT(*) as pedidos FROM pedidos GROUP BY dia ORDER BY dia DESC'
     );
     res.json({ sucesso: true, dados });
   } catch (err) {
